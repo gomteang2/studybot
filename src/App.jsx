@@ -27,31 +27,58 @@ function App() {
   const story = STORIES.find((s) => s.id === selectedDayId) || STORIES[0];
   const totalSteps = story.steps.length;
   const step = story.steps[currentStep];
-  const currentPath = selectedTypes.length > 0 ? selectedTypes[0] : "good";
+  const currentPath = (() => {
+    if (currentStep === 0) return "good";
+    if (currentStep === 1) return selectedTypes[0] || "good";
+    if (currentStep === 2) {
+      const p1 = selectedTypes[0] || "good";
+      const p2 = selectedTypes[1] || "good";
+      return `${p1}-${p2}`;
+    }
+    return "good";
+  })();
 
   const getSceneInfo = () => {
     const step = story.steps[currentStep];
     const currentBackground = step.background || story.background;
+
     if (currentStep === 0) {
+      let extraImg = null;
+      const stepScene = currentScene || step.scene;
+
+      if (stepScene?.extra) {
+        const charType = stepScene.extra.split("_")[0];
+        extraImg = CHARACTERS.common?.[charType]?.[stepScene.extra];
+      } else if (step.newCharacter && CHARACTERS.common?.[step.newCharacter]) {
+        const charImages = CHARACTERS.common[step.newCharacter];
+        extraImg = Object.values(charImages)[0];
+      }
       return {
         background: currentBackground,
-        scene: currentScene || step.scene,
+        scene: stepScene,
         title: Array.isArray(step.title) ? step.title[age] : step.title,
         text: Array.isArray(step.text) ? step.text[age] : step.text,
         grammarTag: Array.isArray(step.grammar)
           ? step.grammar[age]
           : step.grammar,
         choices: step.choices,
-        extraCharacter: null,
+        extraCharacter: extraImg,
+        hideFriend: step.hideFriend || false,
       };
     }
 
-    // step2 이후 — paths 구조
     const path = step.paths?.[currentPath] || step.paths?.good;
 
-    // 추가 캐릭터 이미지
     let extraImg = null;
-    if (path?.newCharacter && CHARACTERS.common?.[path.newCharacter]) {
+    const activeScene = currentScene || path?.scene;
+
+    if (activeScene?.extra) {
+      // scene에 extra 키가 있으면 그 표정 사용
+      // "teacher_angry" → charType: "teacher", charKey: "teacher_angry"
+      const charType = activeScene.extra.split("_")[0];
+      extraImg = CHARACTERS.common?.[charType]?.[activeScene.extra];
+    } else if (path?.newCharacter && CHARACTERS.common?.[path.newCharacter]) {
+      // extra 없으면 newCharacter 첫번째 이미지
       const charImages = CHARACTERS.common[path.newCharacter];
       extraImg = Object.values(charImages)[0];
     }
@@ -61,11 +88,12 @@ function App() {
       scene: currentScene || path?.scene || step.scene,
       title: Array.isArray(path?.title) ? path.title[age] : path?.title,
       text: Array.isArray(path?.text) ? path.text[age] : path?.text,
-      grammarTag: Array.isArray(step.grammar)
-        ? step.grammar[age]
-        : step.grammar,
+      grammarTag: Array.isArray(path?.grammar)
+        ? path.grammar[age]
+        : path?.grammar,
       choices: path?.choices || [],
       extraCharacter: extraImg,
+      hideFriend: path?.hideFriend || false,
     };
   };
 
@@ -226,6 +254,7 @@ function App() {
               heroBubble={heroBubble}
               friendBubble={friendBubble}
               extraCharacter={scene.extraCharacter}
+              hideFriend={scene.hideFriend}
             />
 
             <div

@@ -15,7 +15,7 @@ function DaySelect({ onSelect, completedDays = [] }) {
         marginBottom: '20px',
       }}>
         <div style={{
-          fontFamily: "'Baloo 2', cursive",
+          fontFamily: "'Nunito', sans-serif",
           fontSize: '22px',
           fontWeight: '800',
           color: 'white',
@@ -129,7 +129,7 @@ function DaySelect({ onSelect, completedDays = [] }) {
                   lineHeight: 1,
                 }}>DAY</div>
                 <div style={{
-                  fontFamily: "'Baloo 2', cursive",
+                  fontFamily: "'Nunito', sans-serif",
                   fontSize: '16px',
                   fontWeight: '800',
                   color: isCompleted ? 'white' : isLocked ? '#9ca3af' : '#5b21b6',
@@ -140,7 +140,7 @@ function DaySelect({ onSelect, completedDays = [] }) {
               {/* 제목 */}
               <div style={{ flex: 1 }}>
                 <div style={{
-                  fontFamily: "'Baloo 2', cursive",
+                  fontFamily: "'Nunito', sans-serif",
                   fontSize: '16px',
                   fontWeight: '700',
                   color: isLocked ? '#9ca3af' : '#1f1f1f',

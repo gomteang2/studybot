@@ -7,12 +7,16 @@ const VOICES = {
 }
 
 const webSpeechFallback = (text) => {
-  window.speechSynthesis.cancel()
-  const utterance = new SpeechSynthesisUtterance(text)
-  utterance.lang  = 'en-US'
-  utterance.rate  = 0.9
-  utterance.pitch = 1.1
-  window.speechSynthesis.speak(utterance)
+  return new Promise((resolve) => {
+    window.speechSynthesis.cancel()
+    const utterance = new SpeechSynthesisUtterance(text)
+    utterance.lang  = 'en-US'
+    utterance.rate  = 0.9
+    utterance.pitch = 1.1
+    utterance.onend = () => resolve()
+    utterance.onerror = () => resolve()
+    window.speechSynthesis.speak(utterance)
+  })
 }
 
 export const speak = async (text, voiceType = 'quiz') => {
@@ -21,15 +25,23 @@ export const speak = async (text, voiceType = 'quiz') => {
   const key = import.meta.env.VITE_GOOGLE_TTS_KEY
 
   if (!key) {
-    webSpeechFallback(text)
+    await webSpeechFallback(text)
     return
   }
 
   const cacheKey = `${voiceType}:${text}`
 
+  const playAudio = (url) => {
+    return new Promise((resolve) => {
+      const audio = new Audio(url)
+      audio.onended = () => resolve()
+      audio.onerror = () => resolve()
+      audio.play().catch(() => resolve())
+    })
+  }
+
   if (cache[cacheKey]) {
-    const audio = new Audio(cache[cacheKey])
-    audio.play()
+    await playAudio(cache[cacheKey])
     return
   }
 
@@ -73,11 +85,10 @@ export const speak = async (text, voiceType = 'quiz') => {
     const url  = URL.createObjectURL(blob)
 
     cache[cacheKey] = url
-    const audio = new Audio(url)
-    audio.play()
+    await playAudio(url)
 
   } catch (err) {
     console.error('Google TTS 오류:', err)
-    webSpeechFallback(text)
+    await webSpeechFallback(text)
   }
 }

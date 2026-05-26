@@ -12,6 +12,8 @@ function SceneCard({
   grammarTag,
   heroBubble,
   friendBubble,
+  extraCharacter,
+  hideFriend,
 }) {
   const friendGender = gender === "girl" ? "friend_boy" : "friend_girl";
   const heroImg = CHARACTERS.hero[gender]?.[scene.hero];
@@ -32,22 +34,36 @@ function SceneCard({
 
   // 선택 후 말풍선 + 음성 순서대로
   useEffect(() => {
-    if (heroBubble) {
-      setShowHeroBubble(true);
-      const t1 = setTimeout(() => speak(heroBubble, gender), 300);
-      const t2 = setTimeout(() => {
-        if (friendBubble) {
-          setShowFriendBubble(true);
-          speak(friendBubble, friendVoice);
-        }
-      }, 5000); // 2200 → 4000으로 늘림
-      return () => {
-        clearTimeout(t1);
-        clearTimeout(t2);
-      };
-    } else {
-      setShowHeroBubble(false);
-      setShowFriendBubble(false);
+    let isCancelled = false
+    let timeoutId
+
+    const playConversation = async () => {
+      if (!heroBubble) {
+        setShowHeroBubble(false)
+        setShowFriendBubble(false)
+        return
+      }
+
+      setShowHeroBubble(true)
+      setShowFriendBubble(false)
+
+      await speak(heroBubble, gender)
+      if (isCancelled) return
+
+      if (friendBubble) {
+        timeoutId = setTimeout(() => {
+          if (isCancelled) return
+          setShowFriendBubble(true)
+          speak(friendBubble, friendVoice)
+        }, 1000)
+      }
+    }
+
+    playConversation()
+
+    return () => {
+      isCancelled = true
+      if (timeoutId) clearTimeout(timeoutId)
     }
   }, [heroBubble, friendBubble]);
 
@@ -92,33 +108,53 @@ function SceneCard({
           />
         )}
 
+        {/* 추가 캐릭터 (선생님, 엄마 등) */}
+        {extraCharacter && (
+          <img
+            src={extraCharacter}
+            alt="extra"
+            style={{
+              height: "180px",
+              objectFit: "contain",
+              transition: "all 0.5s ease",
+              filter: "drop-shadow(2px 4px 8px rgba(0,0,0,0.12))",
+              background: "transparent",
+              mixBlendMode: "normal",
+            }}
+          />
+        )}
+
         {/* 친구 캐릭터 */}
-        <img
-          src={friendImg}
-          alt="friend"
-          style={{
-            height: "180px",
-            objectFit: "contain",
-            transition: "all 0.5s ease",
-            filter: "drop-shadow(2px 4px 8px rgba(0,0,0,0.12))",
-            background: "transparent",
-            mixBlendMode: "normal", // 오타 수정
-          }}
-        />
+        {!hideFriend && friendImg && (
+          <img
+            src={friendImg}
+            alt="friend"
+            style={{
+              height: "180px",
+              objectFit: "contain",
+              transition: "all 0.5s ease",
+              filter: "drop-shadow(2px 4px 8px rgba(0,0,0,0.12))",
+              background: "transparent",
+              mixBlendMode: "normal",
+            }}
+          />
+        )}
 
         {/* 주인공 캐릭터 */}
-        <img
-          src={heroImg}
-          alt="hero"
-          style={{
-            height: "190px",
-            objectFit: "contain",
-            transition: "all 0.5s ease",
-            filter: "drop-shadow(2px 4px 8px rgba(0,0,0,0.12))",
-            background: "transparent",
-            mixBlendMode: "normal", // 오타 수정
-          }}
-        />
+        {heroImg && (
+          <img
+            src={heroImg}
+            alt="hero"
+            style={{
+              height: "190px",
+              objectFit: "contain",
+              transition: "all 0.5s ease",
+              filter: "drop-shadow(2px 4px 8px rgba(0,0,0,0.12))",
+              background: "transparent",
+              mixBlendMode: "normal",
+            }}
+          />
+        )}
       </div>
 
       {/* 퀴즈 텍스트 + 음성 버튼 */}
