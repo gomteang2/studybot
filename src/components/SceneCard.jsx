@@ -34,37 +34,37 @@ function SceneCard({
 
   // 선택 후 말풍선 + 음성 순서대로
   useEffect(() => {
-    let isCancelled = false
-    let timeoutId
+    let isCancelled = false;
+    let timeoutId;
 
     const playConversation = async () => {
       if (!heroBubble) {
-        setShowHeroBubble(false)
-        setShowFriendBubble(false)
-        return
+        setShowHeroBubble(false);
+        setShowFriendBubble(false);
+        return;
       }
 
-      setShowHeroBubble(true)
-      setShowFriendBubble(false)
+      setShowHeroBubble(true);
+      setShowFriendBubble(false);
 
-      await speak(heroBubble, gender)
-      if (isCancelled) return
+      await speak(heroBubble, gender);
+      if (isCancelled) return;
 
       if (friendBubble) {
         timeoutId = setTimeout(() => {
-          if (isCancelled) return
-          setShowFriendBubble(true)
-          speak(friendBubble, friendVoice)
-        }, 1000)
+          if (isCancelled) return;
+          setShowFriendBubble(true);
+          speak(friendBubble, friendVoice);
+        }, 1000);
       }
-    }
+    };
 
-    playConversation()
+    playConversation();
 
     return () => {
-      isCancelled = true
-      if (timeoutId) clearTimeout(timeoutId)
-    }
+      isCancelled = true;
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, [heroBubble, friendBubble]);
 
   return (
