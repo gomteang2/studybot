@@ -1,16 +1,19 @@
-# React + Vite
+# 학습지원 프로그램
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 프로젝트 소개
 
-Currently, two official plugins are available:
+이 프로젝트는 어린 아이들이 영어를 효과적으로 학습할 수 있도록 도와주는 퀴즈형식의 학습지원 프로그램입니다. 정서적으로 바르지 않을지언정 문법자체는 오답이 존재하지 않아 틀린 문제가 없으니 아이들의 스트레스를 줄일 수 있으며 일상 생활 속 일어날법한 스토리로 구성되어 일상회화 능력을 높입니다.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 주요 기능
 
-## React Compiler
+- 개인별 학습 진도 관리
+- 사용자 친화적인 UI/UX 제공
+- 포인트 문법 제공
+- 정서적인 피드백 및 격려 제공
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 설치 및 실행 방법
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. 저장소를 클론합니다:
+   ```bash
+   git clone <레포지토리 URL>
+   ```
