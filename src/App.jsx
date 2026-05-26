@@ -67,10 +67,13 @@ function App() {
       };
     }
 
-    const path = step.paths?.[currentPath] || step.paths?.good;
+    const path =
+      step.paths?.[currentPath] ||
+      step.paths?.good ||
+      Object.values(step.paths || {})[0];
 
     let extraImg = null;
-    const activeScene = currentScene || path?.scene;
+    const activeScene = currentScene || path?.scene || step.scene || {};
 
     if (activeScene?.extra) {
       // scene에 extra 키가 있으면 그 표정 사용
@@ -85,7 +88,7 @@ function App() {
 
     return {
       background: path?.background || currentBackground,
-      scene: currentScene || path?.scene || step.scene,
+      scene: activeScene,
       title: Array.isArray(path?.title) ? path.title[age] : path?.title,
       text: Array.isArray(path?.text) ? path.text[age] : path?.text,
       grammarTag: Array.isArray(path?.grammar)
