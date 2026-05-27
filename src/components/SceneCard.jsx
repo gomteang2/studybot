@@ -18,7 +18,11 @@ function SceneCard({
   const friendGender = gender === "girl" ? "friend_boy" : "friend_girl";
   const heroImg = CHARACTERS.hero[gender]?.[scene.hero];
   const friendImg = CHARACTERS.friend[friendGender]?.[scene.friend];
-  const friendVoice = gender === "girl" ? "boy" : "girl";
+  const friendVoice = extraCharacter
+    ? "teacher"
+    : gender === "girl"
+      ? "boy"
+      : "girl";
 
   const [showHeroBubble, setShowHeroBubble] = useState(false);
   const [showFriendBubble, setShowFriendBubble] = useState(false);

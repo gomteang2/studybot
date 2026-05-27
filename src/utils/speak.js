@@ -1,9 +1,10 @@
 const cache = {};
 
 const VOICES = {
-  quiz: { name: "en-US-Neural2-F", ssmlGender: "FEMALE" },
-  girl: { name: "en-US-Neural2-C", ssmlGender: "FEMALE" },
+  quiz: { name: "en-US-Wavenet-F", ssmlGender: "FEMALE" },
+  girl: { name: "en-US-Journey-F", ssmlGender: "FEMALE" },
   boy: { name: "en-US-Neural2-D", ssmlGender: "MALE" },
+  teacher: { name: "en-US-Neural2-C", ssmlGender: "FEMALE" },
 };
 
 const webSpeechFallback = (text) => {
